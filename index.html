@@ -1,11 +1,289 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distribuidor de Gastos — Microservicio</title>
+<meta name="description" content="Microservicio en Java + Spring Boot que reparte los gastos del hogar de forma equitativa e igualitaria. Parte del proyecto Gestor de Gastos Compartidos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    
+
+<div class="grain"></div>
+
+<header class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <a href="#inicio" class="brand">
+      <span class="brand-mark">$</span>
+      <span class="brand-text">DISTRIBUIDOR<span class="brand-slash">/</span>DE&nbsp;GASTOS</span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#inicio">Inicio</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#stack">Stack</a>
+      <a href="#ejemplo">Ejemplo</a>
+      <a href="#probar" class="nav-cta">Probar el servicio</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow">Microservicio · parte de <strong>Gestor de Gastos Compartidos</strong></p>
+        <h1>Distribuidor<br>de Gastos</h1>
+        <p class="hero-lede">
+          Reparte los gastos de un hogar entre sus integrantes de forma <strong>equitativa</strong>
+          (según lo que cada uno gana) e <strong>igualitaria</strong> (por partes iguales), y calcula
+          quién le debe plata a quién para dejar las cuentas balanceadas.
+        </p>
+        <div class="chip-row">
+          <span class="chip chip-gold">Equitativo — según ingresos</span>
+          <span class="chip chip-mint">Igualitario — partes iguales</span>
+        </div>
+        <div class="hero-actions">
+          <a href="#como-funciona" class="btn btn-ghost">Cómo funciona</a>
+          <a href="#probar" class="btn btn-solid">Probar el servicio →</a>
+        </div>
+      </div>
+
+      <div class="hero-receipt" aria-hidden="true">
+        <div class="receipt">
+          <div class="receipt-notch top"></div>
+          <div class="receipt-head">
+            <span>RESUMEN&nbsp;DE&nbsp;HOGAR</span>
+            <span class="receipt-tag">POST /resumen</span>
+          </div>
+          <div class="receipt-row"><span>sueldoHogar</span><i></i><b>$ 1.607.912</b></div>
+          <div class="receipt-row"><span>gastoEquitativo</span><i></i><b class="gold">$ 440.063</b></div>
+          <div class="receipt-row"><span>gastoIgualitario</span><i></i><b class="mint">$ 199.456</b></div>
+          <div class="receipt-divider"></div>
+          <div class="receipt-row small"><span>Mariana → Juan</span><i></i><b class="coral">$ 173.279,14</b></div>
+          <div class="receipt-stamp">balanceado</div>
+          <div class="receipt-notch bottom"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="section" id="como-funciona">
+    <* class="section-inner">
+      <p class="eyebrow">01 — Uso del servicio</p>
+      <h2>Cómo funciona</h2>
+      <p class="section-lede">
+        El microservicio expone un único endpoint que recibe la lista de integrantes del hogar
+        con sus ingresos y gastos, y devuelve el resumen económico completo del período.
+      </p>
+
+      <div class="endpoint-card">
+        <span class="method">POST</span>
+        <span class="path">/resumen</span>
+        <a href="https://distribuidordegastos.onrender.com/resumen" target="_blank" rel="noopener" class="endpoint-link">distribuidordegastos.onrender.com/resumen ↗</a>
+      </div>
+
+      <div class="concept-grid">
+        <div class="concept-card gold-edge">
+          <h3><span class="dot gold"></span>Gasto equitativo</h3>
+          <p>Se reparte en proporción a cuánto gana cada integrante. Quien gana más, aporta más.</p>
+        </div>
+        <div class="concept-card mint-edge">
+          <h3><span class="dot mint"></span>Gasto igualitario</h3>
+          <p>Se reparte en partes iguales entre todos, sin importar el ingreso de cada uno.</p>
+        </div>
+        <div class="concept-card coral-edge">
+          <h3><span class="dot coral"></span>Préstamos internos</h3>
+          <p>Cuando alguien paga un gasto personal de otro integrante, el servicio lo registra como deuda entre ellos.</p>
+        </div>
+      </div>
+
+      <div class="fields-columns">
+        <div class="fields-col">
+          <h3>Qué mandás <span class="mono-tag">(por integrante)</span></h3>
+          <dl class="field-list">
+            <div><dt>nombre</dt><dd>Nombre del integrante del hogar.</dd></div>
+            <div><dt>ganancias</dt><dd>Sus ingresos del período. Puede tener más de uno.</dd></div>
+            <div><dt>personasACargo</dt><dd>Dependientes económicos a su cargo.</dd></div>
+            <div><dt>gastosEquitativosPagados / Pendientes</dt><dd>Gastos equitativos ya pagados y los que quedan pendientes.</dd></div>
+            <div><dt>gastosIgualitariosPagados / Pendientes</dt><dd>Gastos igualitarios ya pagados y los que quedan pendientes.</dd></div>
+            <div><dt>gastosPersonalesDeOtros</dt><dd>Gastos personales que pagó por cuenta de otro integrante, agrupados por nombre.</dd></div>
+          </dl>
+        </div>
+        <div class="fields-col">
+          <h3>Qué te devuelve</h3>
+          <dl class="field-list">
+            <div><dt>sueldoHogar / gastoEquitativo / gastoIgualitario</dt><dd>Totales del hogar en el período.</dd></div>
+            <div><dt>detallePorPersona</dt><dd>Desglose individual: % del hogar que representa, parte que le corresponde de cada gasto, cuánto pagó, y si es deudor o acreedor.</dd></div>
+            <div><dt>ajustesDeSaldos</dt><dd>Los pagos exactos que hay que hacer para dejar las cuentas del hogar equilibradas.</dd></div>
+            <div><dt>miembrosContribuyentes / beneficiarios / totalDeMiembros</dt><dd>Conteo de integrantes según su rol económico en el hogar.</dd></div>
+          </dl>
+        </div>
+      </div>
+      <!--
+      <p class="section-note">
+        El detalle técnico completo (arquitectura, cómo correrlo localmente, etc.) va a estar en el
+        <a href="https://github.com/JonRodCode/DistribuidorDeGastos" target="_blank" rel="noopener">README del repositorio</a> — todavía en construcción.
+      </p>
+    -->
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section class="section section-alt" id="stack">
+    <div class="section-inner">
+      <p class="eyebrow">02 — Bajo el capó</p>
+      <h2>Stack técnico</h2>
+      <p class="section-lede">
+        Servicio sin estado: hoy calcula todo en memoria a partir de lo que le mandás en cada
+        request, sin persistencia de datos (todavía).
+      </p>
+
+      <div class="stack-pills">
+        <span class="pill">Java</span>
+        <span class="pill">Spring Boot</span>
+        <span class="pill">REST API</span>
+        <span class="pill">JSON</span>
+        <span class="pill">Render</span>
+        <span class="pill pill-muted">Sin persistencia (por ahora)</span>
+      </div>
+
+      <div class="stack-links">
+        <a href="https://github.com/JonRodCode/DistribuidorDeGastos" target="_blank" rel="noopener" class="link-card">
+          <span class="link-card-label">Repositorio</span>
+          <span class="link-card-url">github.com/JonRodCode/DistribuidorDeGastos</span>
+        </a>
+        <a href="https://distribuidordegastos.onrender.com/" target="_blank" rel="noopener" class="link-card">
+          <span class="link-card-label">Deploy en vivo</span>
+          <span class="link-card-url">distribuidordegastos.onrender.com</span>
+        </a>
+      </div>
+
+      <p class="section-note">
+        Es una pieza de un proyecto más grande, <strong>Gestor de Gastos Compartidos</strong>,
+        encargada únicamente de resolver la distribución de gastos del hogar.
+      </p>
+    </div>
+  </section>
+
+  <!-- EJEMPLO -->
+  <section class="section" id="ejemplo">
+    <div class="section-inner">
+      <p class="eyebrow">03 — Un caso real</p>
+      <h2>Ejemplo</h2>
+      <p class="section-lede">
+        Un hogar de dos personas, Juan y Mariana, con ingresos distintos y algunos gastos ya pagados,
+        otros pendientes, y un préstamo interno de por medio.
+      </p>
+
+      <div class="example-grid">
+        <div class="example-person">
+          <div class="example-person-head gold-edge">
+            <h3>Juan</h3>
+            <span class="mono-tag">contribuyente</span>
+          </div>
+          <ul class="kv-list">
+            <li><span>Ingresos</span><b>$ 732.262</b></li>
+            <li><span>% del hogar</span><b>45,54%</b></li>
+            <li><span>Le corresponde pagar</span><b>$ 300.137,86</b></li>
+            <li><span>Ya gastó (total)</span><b>$ 505.116</b></li>
+            <li><span>Situación</span><b class="mint">Le deben plata</b></li>
+          </ul>
+        </div>
+        <div class="example-person">
+          <div class="example-person-head mint-edge">
+            <h3>Mariana</h3>
+            <span class="mono-tag">contribuyente</span>
+          </div>
+          <ul class="kv-list">
+            <li><span>Ingresos</span><b>$ 875.650</b></li>
+            <li><span>% del hogar</span><b>54,46%</b></li>
+            <li><span>Le corresponde pagar</span><b>$ 339.381,14</b></li>
+            <li><span>Ya gastó (total)</span><b>$ 194.325</b></li>
+            <li><span>Situación</span><b class="coral">Debe plata</b></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="settle-card">
+        <span class="settle-label">Ajuste de saldos</span>
+        <span class="settle-line">Mariana debe pagar <b class="coral">$ 173.279,14</b> a <b>Juan</b></span>
+      </div>
+
+      <details class="raw-toggle">
+        <summary>Ver JSON de entrada y salida completos</summary>
+        <div class="raw-grid">
+          <div>
+            <span class="raw-label">Entrada</span>
+            <pre id="rawInput"></pre>
+          </div>
+          <div>
+            <span class="raw-label">Salida</span>
+            <pre id="rawOutput"></pre>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- PROBAR -->
+  <section class="section section-alt" id="probar">
+    <div class="section-inner">
+      <p class="eyebrow">04 — Hacé tu prueba</p>
+      <h2>Probá el servicio</h2>
+      <p class="section-lede">
+        Cargá los integrantes del hogar con sus datos y llamá al endpoint real y en vivo.
+        Está desplegado en el plan gratuito de Render: si estaba dormido, la primera respuesta
+        puede tardar hasta un minuto en despertar.
+      </p>
+
+      <div class="try-actions">
+        <button class="btn btn-ghost small" id="loadExampleBtn" type="button">Cargar ejemplo de Juan y Mariana</button>
+        <button class="btn btn-ghost small" id="resetFormBtn" type="button">Vaciar formulario</button>
+      </div>
+
+      <form id="expenseForm" class="expense-form">
+        <div id="peopleContainer"></div>
+
+        <button type="button" class="btn btn-outline" id="addPersonBtn">+ Agregar integrante</button>
+
+        <div class="submit-row">
+          <button type="submit" class="btn btn-solid" id="submitBtn">Calcular distribución →</button>
+        </div>
+      </form>
+
+      <div id="statusBox" class="status-box" hidden></div>
+
+      <div id="resultBox" class="result-box" hidden>
+        <h3>Resultado</h3>
+        <div id="resultSummary" class="receipt result-receipt"></div>
+        <div id="resultPeople" class="example-grid"></div>
+        <div id="resultSettles" class="settle-list"></div>
+        <details class="raw-toggle">
+          <summary>Ver respuesta JSON completa</summary>
+          <pre id="resultRawJson"></pre>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span>Distribuidor de Gastos — microservicio de <strong>Gestor de Gastos Compartidos</strong></span>
+    <a href="https://github.com/JonRodCode/DistribuidorDeGastos" target="_blank" rel="noopener">Ver repositorio ↗</a>
+  </div>
+</footer>
+
+<script src="/scripts/script.js"></script>
 </body>
 </html>
